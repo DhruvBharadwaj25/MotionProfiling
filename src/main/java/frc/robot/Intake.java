@@ -22,25 +22,28 @@ public class Intake extends SubsystemBase {
         return instance;
     }
 
-    WPI_TalonFX falcon;
-    XboxController controller;
+    private Intake() {
 
+    }
+
+    WPI_TalonFX falcon;
 
     private DoubleSolenoid one;
 
     public void initHardware() {
         one = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 1);
         falcon = new WPI_TalonFX(0);
-        controller = new XboxController(0);
     }
 
-    public void FalconSpeed() {
-        double joystickValue = controller.getLeftY();
-        if (joystickValue < 0){
+    public void falconSpeed(double speed) {
+        if (speed < 0){
+            falcon.set(0);
+        }
+        if (speed > -0.1 && speed < 0.1) {
             falcon.set(0);
         }
         else {
-            falcon.set(joystickValue);
+            falcon.set(speed);
         }
     }
 

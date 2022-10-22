@@ -2,25 +2,26 @@ package frc.robot;
 
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.*;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 
 public class Robot extends TimedRobot {
 
-  Intake intake;
-  XboxController controller;
+  public XboxController controller;
 
 
   @Override
   public void robotInit() {
-    intake = new Intake();
-    controller = new XboxController(0);
+    Intake.getInstance().initHardware();
+    OI.getInstance().setupControls();
   }
 
 
   @Override
-  public void robotPeriodic() {}
+  public void robotPeriodic() {
+    CommandScheduler.getInstance().run();
+  }
 
 
   @Override
@@ -36,19 +37,20 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-
+    CommandScheduler.getInstance().schedule(new IntakeCommand());
   }
 
 
 
   @Override
   public void teleopPeriodic() {
-    intake.FalconSpeed();
+    double joystickValue = controller.getLeftY();
+    Intake.getInstance().falconSpeed(joystickValue);
     if (controller.getAButtonPressed())  {
-      intake.intakeBackwardPress();
+      Intake.getInstance().intakeBackwardPress();
     }
     if (controller.getBButtonPressed())  {
-      intake.intakeForwardPress();
+      Intake.getInstance().intakeForwardPress();
     }
   }
 
