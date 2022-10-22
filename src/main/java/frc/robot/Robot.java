@@ -3,6 +3,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 
@@ -15,6 +16,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     Intake.getInstance().initHardware();
     OI.getInstance().setupControls();
+    Shooter.getInstance().initHardware();
   }
 
 
@@ -38,20 +40,14 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     CommandScheduler.getInstance().schedule(new IntakeCommand());
+    CommandScheduler.getInstance().schedule(new ShooterCommand());
   }
 
 
 
   @Override
   public void teleopPeriodic() {
-    double joystickValue = controller.getLeftY();
-    Intake.getInstance().falconSpeed(joystickValue);
-    if (controller.getAButtonPressed())  {
-      Intake.getInstance().intakeBackwardPress();
-    }
-    if (controller.getBButtonPressed())  {
-      Intake.getInstance().intakeForwardPress();
-    }
+
   }
 
   @Override
