@@ -1,5 +1,7 @@
 package frc.robot;
 
+import org.opencv.core.TickMeter;
+
 public class Constants {
     public static final int LEFT_MOTOR_ID = 0;
     public static final int RIGHT_MOTOR_ID = 1;
@@ -15,6 +17,4 @@ public class Constants {
 
     public static final int SPARK_ID = 0;
     public static final int[] ENCODER_IDS = {1,2};
-
 }
-

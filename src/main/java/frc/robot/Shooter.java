@@ -1,13 +1,20 @@
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import org.opencv.core.TickMeter;
+
 
 public class Shooter {
 
     private static Shooter instance;
+
     public static Shooter getInstance() {
         if (instance == null) {
             instance = new Shooter();
@@ -18,29 +25,44 @@ public class Shooter {
     WPI_TalonFX falconUp;
     WPI_TalonFX falconDown;
     WPI_TalonFX hood;
+    double endPosition;
+    TrapezoidProfile.State start;
+    TrapezoidProfile.State end;
+    TrapezoidProfile.Constraints constraints;
+    TrapezoidProfile profile;
+    PIDController controller;
+    Encoder encoder;
+    double time;
+    double output;
 
     public void initHardware() {
+        endPosition = OI.getInstance().getController().getLeftY();
         falconUp = new WPI_TalonFX(0);
         falconDown = new WPI_TalonFX(1);
         hood = new WPI_TalonFX(2);
+        start = new TrapezoidProfile.State(0, 0);
+        end = new TrapezoidProfile.State(endPosition, 0);
+        encoder = new Encoder(Constants.ENCODER_IDS[0], Constants.ENCODER_IDS[1]);
+        controller = new PIDController(0.3, 0, 0);
+        constraints = new TrapezoidProfile.Constraints(2, 0.2);
+        profile = new TrapezoidProfile(constraints, end, start);
     }
 
     public void flywheelSpinSpeed(double speed) {
+        //always want positive speed
         if (speed < 0) {
             falconDown.set(0);
             falconUp.set(0);
-        }
-        else {
+        } else {
             falconUp.set(-speed);
             falconDown.set(speed);
         }
     }
 
-    public void flywheelHoodUp() {
-        hood.set(-0.3);
-    }
-
-    public void flywheelHoodDown() {
-        hood.set(0.3);
+    public void flywheelHood(double time) {
+        TrapezoidProfile.State setpoint = profile.calculate(time);
+        controller.setSetpoint(setpoint.velocity);
+        output = controller.calculate(hood.getSelectedSensorPosition() / Constants.TICKS_PER_INCH);
+        hood.set(ControlMode.PercentOutput, output);
     }
 }
