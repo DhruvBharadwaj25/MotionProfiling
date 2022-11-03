@@ -25,14 +25,17 @@ public class Shooter {
     WPI_TalonFX falconUp;
     WPI_TalonFX falconDown;
     WPI_TalonFX hood;
+
     double endPosition;
+
     TrapezoidProfile.State start;
     TrapezoidProfile.State end;
     TrapezoidProfile.Constraints constraints;
     TrapezoidProfile profile;
     PIDController controller;
+
     Encoder encoder;
-    double time;
+
     double output;
 
     public void initHardware() {
@@ -53,7 +56,9 @@ public class Shooter {
         if (speed < 0) {
             falconDown.set(0);
             falconUp.set(0);
-        } else {
+        }
+
+        else {
             falconUp.set(-speed);
             falconDown.set(speed);
         }

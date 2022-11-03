@@ -8,9 +8,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 public class ShooterCommand extends CommandBase {
 
     int counter;
-    double endPosition;
     double time;
-    double endendPosition;
 
     @Override
     public void initialize() {
