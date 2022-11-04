@@ -35,7 +35,6 @@ public class Shooter {
     PIDController controller;
 
     Encoder encoder;
-
     double output;
 
     public void initHardware() {
@@ -43,7 +42,7 @@ public class Shooter {
         falconUp = new WPI_TalonFX(0);
         falconDown = new WPI_TalonFX(1);
         hood = new WPI_TalonFX(2);
-        start = new TrapezoidProfile.State(0, 0);
+        start = new TrapezoidProfile.State(hood.getSelectedSensorPosition(), 0);
         end = new TrapezoidProfile.State(endPosition, 0);
         encoder = new Encoder(Constants.ENCODER_IDS[0], Constants.ENCODER_IDS[1]);
         controller = new PIDController(0.3, 0, 0);
@@ -67,7 +66,7 @@ public class Shooter {
     public void flywheelHood(double time) {
         TrapezoidProfile.State setpoint = profile.calculate(time);
         controller.setSetpoint(setpoint.velocity);
-        output = controller.calculate(hood.getSelectedSensorPosition() / Constants.TICKS_PER_INCH);
+        output = controller.calculate(hood.getSelectedSensorPosition());
         hood.set(ControlMode.PercentOutput, output);
     }
 }

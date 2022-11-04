@@ -36,7 +36,13 @@ public class ShooterCommand extends CommandBase {
             Shooter.getInstance().flywheelSpinSpeed(joystickShooter);
         }
 
+        //error
         if (joystickHood > -0.1 && joystickHood < 0.1) {
+            Shooter.getInstance().hood.set(0);
+        }
+
+        //cannot be less than 0
+        if (joystickHood < 0) {
             Shooter.getInstance().hood.set(0);
         }
 
