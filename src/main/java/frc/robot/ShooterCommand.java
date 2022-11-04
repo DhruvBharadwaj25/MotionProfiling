@@ -1,6 +1,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -9,6 +10,7 @@ public class ShooterCommand extends CommandBase {
 
     int counter;
     double time;
+    double num_ticks;
 
     @Override
     public void initialize() {
@@ -47,17 +49,17 @@ public class ShooterCommand extends CommandBase {
         }
 
         else {
-            Shooter.getInstance().flywheelHood(time);
+            Shooter.getInstance().flywheelHood(time, num_ticks);
         }
 
-        time += 0.02;
+        time += 0.001;
 
 
     }
 
     @Override
     public void end(boolean interrupted) {
-
+        super.end(interrupted);
     }
 
     @Override

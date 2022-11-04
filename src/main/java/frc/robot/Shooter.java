@@ -25,16 +25,10 @@ public class Shooter {
     WPI_TalonFX falconUp;
     WPI_TalonFX falconDown;
     WPI_TalonFX hood;
+    int counter;
 
     double endPosition;
 
-    TrapezoidProfile.State start;
-    TrapezoidProfile.State end;
-    TrapezoidProfile.Constraints constraints;
-    TrapezoidProfile profile;
-    PIDController controller;
-
-    Encoder encoder;
     double output;
 
     public void initHardware() {
@@ -42,12 +36,10 @@ public class Shooter {
         falconUp = new WPI_TalonFX(0);
         falconDown = new WPI_TalonFX(1);
         hood = new WPI_TalonFX(2);
-        start = new TrapezoidProfile.State(hood.getSelectedSensorPosition(), 0);
-        end = new TrapezoidProfile.State(endPosition, 0);
-        encoder = new Encoder(Constants.ENCODER_IDS[0], Constants.ENCODER_IDS[1]);
-        controller = new PIDController(0.3, 0, 0);
-        constraints = new TrapezoidProfile.Constraints(2, 0.2);
-        profile = new TrapezoidProfile(constraints, end, start);
+        hood.config_kP(0, 0.30);
+        hood.config_kI(0, 0.);
+        hood.config_kD(0, 0.);
+        counter = 0;
     }
 
     public void flywheelSpinSpeed(double speed) {
@@ -63,10 +55,12 @@ public class Shooter {
         }
     }
 
-    public void flywheelHood(double time) {
-        TrapezoidProfile.State setpoint = profile.calculate(time);
-        controller.setSetpoint(setpoint.velocity);
-        output = controller.calculate(hood.getSelectedSensorPosition());
-        hood.set(ControlMode.PercentOutput, output);
+
+    public void flywheelHood(double time, double num_ticks) {
+        double hoodspt = num_ticks * OI.getInstance().getController().getLeftY();
+        hood.set(ControlMode.Position, hoodspt);
     }
+
+
+
 }

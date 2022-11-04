@@ -9,14 +9,16 @@ public class IntakeCommand extends CommandBase {
         addRequirements(Intake.getInstance());
     }
 
+    int numIntakes;
+
     @Override
     public void initialize() {
-        super.initialize();
+        numIntakes = 0;
     }
 
     @Override
     public void execute() {
-        double joystickValue = OI.getInstance().getController().getLeftY();
+        double joystickValue = OI.getInstance().getController().getRightY();
         Intake.getInstance().falconSpeed(joystickValue);
         if (OI.getInstance().getController().getAButtonPressed())  {
             Intake.getInstance().intakeBackwardPress();
