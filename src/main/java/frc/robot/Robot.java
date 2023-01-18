@@ -12,16 +12,13 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
-    Intake.getInstance().initHardware();
-    OI.getInstance().setupControls();
-    Shooter.getInstance().initHardware();
-    Conveyor.getInstance().initHardware();
+
   }
 
 
   @Override
   public void robotPeriodic() {
-    CommandScheduler.getInstance().run();
+
   }
 
 
@@ -38,9 +35,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    CommandScheduler.getInstance().schedule(new IntakeCommand());
-    CommandScheduler.getInstance().schedule(new ShooterCommand());
-    CommandScheduler.getInstance().schedule(new ConveyorCommand());
+
   }
 
   @Override
